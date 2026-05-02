@@ -1,85 +1,109 @@
 # sistema de noticias
+# subbstituindo a lista global de textos classificados por uma classe que
+# representa as propriedades de cada uma dessas notícias
 
-noticias_avaliadas = []
+# criei a classe notícia para substituir a lista global de notícias/textos que tinha antes.
+# Com isso, a gente evita ter inconsistêscia e garante um formato único a cada uma das mensagens
+# Além de poder classificar o conteúdo do objt na própria classe
 
 
-# função que faz tudo
-def persistir_textos_classificados(texto, classificacao=None):
-    # essa função adiciona uma coisa
-    if texto != "":
-        texto_classificado = {}
-        texto_classificado["texto"] = texto
-        if classificacao == None:
-            texto_classificado["classificacao"] = "duvidosa"
+class Noticia:
+
+    # Troquei o 'None' provisóriamente por "pendente"
+    def __init__(self, texto, classificacao="Pendente"):
+        self.texto = texto
+        self.classificacao = classificacao
+
+    # coloquei o método de análise de qualidade como uma função intrínseca a cada objt notícia
+    def analisar_qualidade(self):  # renomeação de função
+
+        confiabilidade = 0
+
+        if "!!!" in self.texto:
+            confiabilidade += 1
+
+        if "URGENTE" in self.texto:
+            confiabilidade += 1
+
+        if len(self.texto) < 10:
+            confiabilidade += 1
+
+        if confiabilidade == 0:
+            self.classificacao = "Confiavel"
+        # coloquei aqui parte da validação de dados que ficava na função 'faz tudo'
+        elif (confiabilidade == 1) or (self.classificacao == "Pendente"):
+            self.classificacao = "Duvidosa"
         else:
-            texto_classificado["classificacao"] = classificacao
-        noticias_avaliadas.append(texto_classificado)
-    else:
-        print("erro")
+            self.classificacao = "Falsa"
 
 
-def listar_noticias_avaliadas():
-    # lista tudo
-    for i in range(0, len(noticias_avaliadas)):
-        print("Texto:", noticias_avaliadas[i]["texto"])
-        print("Classificacao:", noticias_avaliadas[i]["classificacao"])
-        print("-------------------")
+# Classe responsável apenas pela lógica de classificação
+class ServicoClassificacao:
+
+    @staticmethod
+    def classificar_texto_manualmente(texto, classificacao):
+        noticia = Noticia(texto, classificacao)
+        return noticia
+
+    @staticmethod
+    def classificar_texto_automaticamente(texto):
+        noticia = Noticia(texto)
+        noticia.analisar_qualidade()
+        return noticia
 
 
-def analisar_texto_informado(texto):
-    # analisa o texto
-    confiabilidade = 0
+# classes com funções específicas para o monitoramento das notícias/textos avaliado(a)s
+class GerenciadorNoticias:
 
-    if "!!!" in texto:
-        confiabilidade = confiabilidade + 1
-    if "URGENTE" in texto:
-        confiabilidade = confiabilidade + 1
-    if len(texto) < 10:
-        confiabilidade = confiabilidade + 1
+    def __init__(self):
+        self._noticias = []  # Coloquei a lista de noticias como um atributo privado da classe
 
-    if confiabilidade == 0:
-        return "confiavel"
-    elif confiabilidade == 1:
-        return "duvidosa"
-    else:
-        return "falsa"
+    # função que apenas armazena novos textos classificados na lista de noticias já avaliadas
+    def persistir_textos_classificados(self, noticia: Noticia):
+        self._noticias.append(noticia)
 
-
-def classificar_texto_manualmente():
-    texto = input("Digite o texto: ")
-    classificacao = input("Digite classificacao: ")
-
-    if classificacao == "":
-        persistir_textos_classificados(texto)
-    else:
-        persistir_textos_classificados(texto, classificacao)
+    def listar_noticias_avaliadas(self):
+        # lista tudo
+        for i in range(0, len(self._noticias)):
+            print("Texto:", self._noticias[i].texto)
+            print("Classificacao:", self._noticias[i].classificacao)
+            print("-------------------")
+        print(" ")
 
 
-def classificar_texto_automaticamente():
-    texto = input("Digite o texto: ")
-    classificacao = analisar_texto_informado(texto)
-    persistir_textos_classificados(texto, classificacao)
-
-
+# função principal para interação com o usuário
 def menu():
+
+    gerenciador = GerenciadorNoticias()
+
     while True:
-        print("1 - adicionar manual")
-        print("2 - adicionar automatico")
-        print("3 - listar")
+        print("1 - adicionar classificação de forma manual")
+        print("2 - adicionar classificaçao de forma automática")
+        print("3 - listar noticias classificadas")
         print("4 - sair")
 
         opcao_selecionada = input("opcao: ")
 
         if opcao_selecionada == "1":
-            classificar_texto_manualmente()
+            texto = input("Digite o texto: ")
+            classificacao = input("Digite a classificacao: ")
+
+            gerenciador.persistir_textos_classificados(
+                ServicoClassificacao.classificar_texto_manualmente(texto, classificacao))
+
         elif opcao_selecionada == "2":
-            classificar_texto_automaticamente()
+            texto = input("Digite o texto: ")
+            gerenciador.persistir_textos_classificados(
+                ServicoClassificacao.classificar_texto_automaticamente(texto))
+
         elif opcao_selecionada == "3":
-            listar_noticias_avaliadas()
+            gerenciador.listar_noticias_avaliadas()
+
         elif opcao_selecionada == "4":
             break
         else:
-            print("errado")
+            # nesse loop tem q verificar a validade do dado de opção também
+            print("Opção Inválida. Tente novamente")
 
 
 # comentarios desnecessarios abaixo
