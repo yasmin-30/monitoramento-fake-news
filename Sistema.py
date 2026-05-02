@@ -1,63 +1,64 @@
 # sistema de noticias
 
-data = []
+noticias_avaliadas = []
+
 
 # função que faz tudo
-def f(a, b=None):
+def persistir_textos_classificados(texto, classificacao=None):
     # essa função adiciona uma coisa
-    if a != "":
-        d = {}
-        d["t"] = a
-        if b == None:
-            d["c"] = "duvidosa"
+    if texto != "":
+        texto_classificado = {}
+        texto_classificado["texto"] = texto
+        if classificacao == None:
+            texto_classificado["classificacao"] = "duvidosa"
         else:
-            d["c"] = b
-        data.append(d)
+            texto_classificado["classificacao"] = classificacao
+        noticias_avaliadas.append(texto_classificado)
     else:
         print("erro")
 
 
-def func2():
+def listar_noticias_avaliadas():
     # lista tudo
-    for i in range(0, len(data)):
-        print("Texto:", data[i]["t"])
-        print("Classificacao:", data[i]["c"])
+    for i in range(0, len(noticias_avaliadas)):
+        print("Texto:", noticias_avaliadas[i]["texto"])
+        print("Classificacao:", noticias_avaliadas[i]["classificacao"])
         print("-------------------")
 
 
-def analisar(txt):
+def analisar_texto_informado(texto):
     # analisa o texto
-    score = 0
+    confiabilidade = 0
 
-    if "!!!" in txt:
-        score = score + 1
-    if "URGENTE" in txt:
-        score = score + 1
-    if len(txt) < 10:
-        score = score + 1
+    if "!!!" in texto:
+        confiabilidade = confiabilidade + 1
+    if "URGENTE" in texto:
+        confiabilidade = confiabilidade + 1
+    if len(texto) < 10:
+        confiabilidade = confiabilidade + 1
 
-    if score == 0:
+    if confiabilidade == 0:
         return "confiavel"
-    elif score == 1:
+    elif confiabilidade == 1:
         return "duvidosa"
     else:
         return "falsa"
 
 
-def add_manual():
-    t = input("Digite o texto: ")
-    c = input("Digite classificacao: ")
+def classificar_texto_manualmente():
+    texto = input("Digite o texto: ")
+    classificacao = input("Digite classificacao: ")
 
-    if c == "":
-        f(t)
+    if classificacao == "":
+        persistir_textos_classificados(texto)
     else:
-        f(t, c)
+        persistir_textos_classificados(texto, classificacao)
 
 
-def add_auto():
-    t = input("Digite o texto: ")
-    c = analisar(t)
-    f(t, c)
+def classificar_texto_automaticamente():
+    texto = input("Digite o texto: ")
+    classificacao = analisar_texto_informado(texto)
+    persistir_textos_classificados(texto, classificacao)
 
 
 def menu():
@@ -67,15 +68,15 @@ def menu():
         print("3 - listar")
         print("4 - sair")
 
-        op = input("opcao: ")
+        opcao_selecionada = input("opcao: ")
 
-        if op == "1":
-            add_manual()
-        elif op == "2":
-            add_auto()
-        elif op == "3":
-            func2()
-        elif op == "4":
+        if opcao_selecionada == "1":
+            classificar_texto_manualmente()
+        elif opcao_selecionada == "2":
+            classificar_texto_automaticamente()
+        elif opcao_selecionada == "3":
+            listar_noticias_avaliadas()
+        elif opcao_selecionada == "4":
             break
         else:
             print("errado")
