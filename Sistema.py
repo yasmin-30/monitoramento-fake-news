@@ -10,7 +10,7 @@
 class Noticia:
 
     # Troquei o 'None' provisóriamente por "pendente"
-    def __init__(self, texto, classificacao="Pendente"):
+    def __init__(self, texto, classificacao="pendente"):
         self.texto = texto
         self.classificacao = classificacao
 
@@ -22,19 +22,20 @@ class Noticia:
         if "!!!" in self.texto:
             confiabilidade += 1
 
-        if "URGENTE" in self.texto:
+        if "URGENTE" in self.texto.upper():
             confiabilidade += 1
 
         if len(self.texto) < 10:
             confiabilidade += 1
 
         if confiabilidade == 0:
-            self.classificacao = "Confiavel"
-        # coloquei aqui parte da validação de dados que ficava na função 'faz tudo'
-        elif (confiabilidade == 1) or (self.classificacao == "Pendente"):
-            self.classificacao = "Duvidosa"
+            self.classificacao = "confiavel"
+            
+        elif confiabilidade == 1:
+            self.classificacao = "duvidosa"
+        
         else:
-            self.classificacao = "Falsa"
+            self.classificacao = "falsa"
 
 
 # Classe responsável apenas pela lógica de classificação
@@ -63,18 +64,44 @@ class GerenciadorNoticias:
         self._noticias.append(noticia)
 
     def listar_noticias_avaliadas(self):
-        # lista tudo
-        for i in range(0, len(self._noticias)):
-            print("Texto:", self._noticias[i].texto)
-            print("Classificacao:", self._noticias[i].classificacao)
-            print("-------------------")
-        print(" ")
+        print("\n--- LISTA DE NOTÍCIAS AVALIADAS ---")
 
+        if self._noticias:
+            # lista tudo
+            for i in range(0, len(self._noticias)):
+                print("\nTexto:", self._noticias[i].texto)
+                print("Classificacao:", self._noticias[i].classificacao)
+                print("-------------------")
+            print(" ")
+        
+        else:
+            print("\nAinda não há notícias classificadas.\nInsira notícias e tente novamente!\n")
+
+class ValidacaoParametros:
+
+    @staticmethod
+    def validar_texto(texto):
+        texto_valido = texto.strip()
+        
+        if texto_valido:
+            return True
+
+        return False
+
+    @staticmethod
+    def validar_classificacao(classificacao):        
+        if classificacao in ['confiavel', 'duvidosa', 'falsa', 'pendente']:
+            return True
+
+        return False
 
 # função principal para interação com o usuário
 def menu():
 
     gerenciador = GerenciadorNoticias()
+    verificador = ValidacaoParametros()
+
+    print("--- SISTEMA DE NOTÍCIAS ---\n")
 
     while True:
         print("1 - adicionar classificação de forma manual")
@@ -82,17 +109,34 @@ def menu():
         print("3 - listar noticias classificadas")
         print("4 - sair")
 
-        opcao_selecionada = input("opcao: ")
+        opcao_selecionada = input("opcao: ").strip()
 
         if opcao_selecionada == "1":
             texto = input("Digite o texto: ")
-            classificacao = input("Digite a classificacao: ")
+            classificacao = input("Digite a classificacao: ").strip().lower()
 
+            texto_valido = verificador.validar_texto(texto)
+            classificacao_valida = verificador.validar_classificacao(classificacao)
+
+            if not texto_valido:
+                print("\nERRO: O texto inserido está vazio. Tente novamente!\n")
+                continue
+            
+            if not classificacao_valida:
+                    print("\nERRO: A classificação inserida é inválida. Tente novamente!\n")
+                    continue
+        
             gerenciador.persistir_textos_classificados(
-                ServicoClassificacao.classificar_texto_manualmente(texto, classificacao))
+                ServicoClassificacao.classificar_texto_manualmente(texto, classificacao))                
 
         elif opcao_selecionada == "2":
             texto = input("Digite o texto: ")
+            texto_valido = verificador.validar_texto(texto)
+            
+            if not texto_valido:
+                print("\nERRO: O texto inserido está vazio. Tente novamente!\n")
+                continue
+            
             gerenciador.persistir_textos_classificados(
                 ServicoClassificacao.classificar_texto_automaticamente(texto))
 
@@ -100,10 +144,12 @@ def menu():
             gerenciador.listar_noticias_avaliadas()
 
         elif opcao_selecionada == "4":
+            print("\nEncerrando o sistema...")
             break
+
         else:
             # nesse loop tem q verificar a validade do dado de opção também
-            print("Opção Inválida. Tente novamente")
+            print("\nERRO: Opção Inválida. Tente novamente!\n")
 
 
 # comentarios desnecessarios abaixo
