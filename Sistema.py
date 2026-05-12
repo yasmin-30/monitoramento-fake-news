@@ -94,6 +94,16 @@ class ValidacaoParametros:
             return True
 
         return False
+    
+    @staticmethod
+    def validar_classificacao_correta(texto, classificacao_manual):
+        noticia_teste = Noticia(texto)
+        noticia_teste.analisar_qualidade()
+
+        if noticia_teste.classificacao == classificacao_manual:
+            return True
+        
+        return False
 
 # função principal para interação com o usuário
 def menu():
@@ -116,14 +126,22 @@ def menu():
             classificacao = input("Digite a classificacao: ").strip().lower()
 
             texto_valido = verificador.validar_texto(texto)
-            classificacao_valida = verificador.validar_classificacao(classificacao)
-
             if not texto_valido:
                 print("\nERRO: O texto inserido está vazio. Tente novamente!\n")
                 continue
             
+            classificacao_valida = verificador.validar_classificacao(classificacao)
             if not classificacao_valida:
                     print("\nERRO: A classificação inserida é inválida. Tente novamente!\n")
+                    continue
+            
+            classificacao_correta = verificador.validar_classificacao_correta(texto, classificacao)
+            if not classificacao_correta:
+                print(f"\nALERTA: A classificação manual, {classificacao}, difere da análise automática do sistema!")
+                confirmar = input("Deseja manter sua classificação assim mesmo? (s/n): ").strip().lower()
+
+                if confirmar != 's':
+                    print("Operação cancelada.\n")
                     continue
         
             gerenciador.persistir_textos_classificados(
