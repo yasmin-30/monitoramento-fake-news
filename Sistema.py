@@ -91,7 +91,7 @@ class ValidacaoParametros:
 
     @staticmethod
     def validar_classificacao(classificacao):        
-        if classificacao in ['confiavel', 'duvidosa', 'falsa', 'pendente']:
+        if classificacao in ['confiavel', 'duvidosa', 'falsa']:
             return True
 
         return False
