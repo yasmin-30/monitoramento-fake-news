@@ -17,6 +17,39 @@ O sistema foi desenvolvido para cadastrar, analisar e classificar notícias de a
 
 ---
 
+## Estrutura do Projeto
+
+### Hierarquia de Arquivos
+
+projeto/
+├── Interface/
+│   └── MenuNoticias.py
+├── Modelo/
+│   └── Noticia.py
+├── Servicos/
+│   ├── GerenciadorNoticias.py
+│   └── ServicoClassificacao.py
+├── Utilitarios/
+│   └── ValidacaoParametros.py
+├── Main.py
+└── README.md
+
+## Organização de Camadas
+
+### Interface
+Contém os módulos responsáveis pela interação com o usuário.
+
+### Modelo
+Define as entidades e estruturas fundamentais do sistema.
+
+### Servicos
+Concentra a lógica de negócio, processamento de dados e classificações.
+
+### Utilitarios
+Reúne funções auxiliares voltadas à sanitização e validação de parâmetros.
+
+---
+
 ## Estrutura dos Módulos e Classes
 
 ### Noticia.py
