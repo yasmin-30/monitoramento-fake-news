@@ -1,13 +1,37 @@
-from Serviços.ServicoClassificacao import ServicoClassificacao
+from Servicos.ServicoClassificacao import ServicoClassificacao
 
 
 class MenuNoticias:
+    """
+    Classe responsável pela interface textual do sistema.
+
+    Controla a interação com o usuário, captura entradas,
+    realiza validações e coordena o fluxo principal da aplicação.
+    """
 
     def __init__(self, gerenciador, verificador):
+        """
+        Inicializa o menu do sistema.
+
+        Args:
+            gerenciador: Instância responsável pelo gerenciamento
+                das notícias classificadas.
+            verificador: Instância responsável pelas validações
+                de entradas do sistema.
+        """
+
         self.gerenciador = gerenciador
         self.verificador = verificador
 
     def obter_texto(self):
+        """
+        Solicita ao usuário o texto da notícia e valida a entrada.
+
+        Returns:
+            str | None: Retorna o texto inserido caso seja válido.
+            Caso contrário, retorna None.
+        """
+
         texto = input("\nDigite o texto: ")
         texto_valido = self.verificador.validar_texto(texto)
 
@@ -17,6 +41,14 @@ class MenuNoticias:
         return None
 
     def obter_classificacao(self):
+        """
+        Solicita ao usuário uma classificação manual para a notícia.
+
+        Returns:
+            str | None: Retorna a classificação válida informada
+            pelo usuário. Caso a entrada seja inválida, retorna None.
+        """
+
         print("Opções: confiavel, duvidosa, falsa")
         classificacao = input("Digite a classificação: ").strip().lower()
         classificacao_valida = self.verificador.validar_classificacao(
@@ -28,6 +60,22 @@ class MenuNoticias:
         return None
 
     def resolver_conflito(self, texto, classificacao_manual):
+        """
+        Verifica inconsistências entre a classificação manual
+        e a classificação sugerida pelo sistema.
+
+        Caso exista divergência, o usuário pode decidir
+        entre manter a classificação manual ou utilizar
+        a classificação automática.
+
+        Args:
+            texto (str): Texto da notícia analisada.
+            classificacao_manual (str): Classificação inserida pelo usuário.
+
+        Returns:
+            str: Classificação final escolhida.
+        """
+
         classificacao_correta, classificacao_sistema = self.verificador.validar_classificacao_correta(
             texto, classificacao_manual)
 
@@ -50,8 +98,15 @@ class MenuNoticias:
 
                 print("ERRO: Opção inválida")
 
-    # função principal para interação com o usuário
     def menu(self):
+        """
+        Executa o menu principal do sistema.
+
+        Permite ao usuário adicionar notícias manualmente
+        ou automaticamente, listar notícias classificadas
+        e encerrar o sistema.
+        """
+
 
         print("--- SISTEMA DE NOTÍCIAS ---\n")
 

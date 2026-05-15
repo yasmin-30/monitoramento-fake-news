@@ -1,17 +1,44 @@
-# criei a classe notícia para substituir a lista global de notícias/textos que tinha antes.
-# Com isso, a gente evita ter inconsistêscia e garante um formato único a cada uma das mensagens
-# Além de poder classificar o conteúdo do objt na própria classe
-
-
 class Noticia:
+    """
+    Classe responsável pela representação de uma notícia.
 
-    # Troquei o 'None' provisóriamente por "pendente"
+    Armazena o texto da notícia, sua classificação e
+    disponibiliza métodos para análise automática da
+    qualidade da informação.
+    """
+
     def __init__(self, texto, classificacao="pendente"):
+        """
+        Inicializa uma nova notícia.
+
+        Args:
+            texto (str): Conteúdo textual da notícia.
+            classificacao (str, opcional): Classificação inicial
+                da notícia. O valor padrão é "pendente".
+        """
+
         self.texto = texto
         self.classificacao = classificacao
 
-    # coloquei o método de análise de qualidade como uma função intrínseca a cada objt notícia
-    def analisar_qualidade(self):  # renomeação de função
+    def analisar_qualidade(self):  
+        """
+        Realiza a análise automática da qualidade da notícia.
+
+        A classificação é definida com base em critérios simples,
+        como uso de linguagem sensacionalista e tamanho reduzido
+        do texto.
+
+        Regras analisadas:
+            - Presença de "!!!";
+            - Presença da palavra "URGENTE";
+            - Texto com menos de 10 caracteres.
+
+        A classificação final pode ser:
+            - confiavel;
+            - duvidosa;
+            - falsa.
+        """
+
 
         confiabilidade = 0
 
