@@ -21,6 +21,7 @@ O sistema foi desenvolvido para cadastrar, analisar e classificar notícias de a
 
 ### Hierarquia de Arquivos
 
+```text
 projeto/
 ├── Interface/
 │   └── MenuNoticias.py
@@ -33,6 +34,7 @@ projeto/
 │   └── ValidacaoParametros.py
 ├── Main.py
 └── README.md
+```
 
 ## Organização de Camadas
 
