@@ -1,4 +1,4 @@
-from ServicoClassificacao import ServicoClassificacao
+from Serviços.ServicoClassificacao import ServicoClassificacao
 
 
 class ValidacaoParametros:

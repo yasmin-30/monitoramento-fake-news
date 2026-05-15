@@ -1,4 +1,4 @@
-from Noticia import Noticia
+from Modelo.Noticia import Noticia
 
 # classes com funções específicas para o monitoramento das notícias/textos avaliado(a)s
 

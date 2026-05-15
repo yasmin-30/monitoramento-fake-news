@@ -6,11 +6,10 @@
 # Com isso, a gente evita ter inconsistêscia e garante um formato único a cada uma das mensagens
 # Além de poder classificar o conteúdo do objt na própria classe
 
-from Noticia import Noticia
-from ServicoClassificacao import ServicoClassificacao
-from GerenciadorNoticias import GerenciadorNoticias
-from ValidacaoParametros import ValidacaoParametros
-from MenuNoticias import MenuNoticias
+
+from Serviços.GerenciadorNoticias import GerenciadorNoticias
+from Utilitarios.ValidacaoParametros import ValidacaoParametros
+from Interface.MenuNoticias import MenuNoticias
 
 if __name__ == "__main__":
     # Configuração do Sistema

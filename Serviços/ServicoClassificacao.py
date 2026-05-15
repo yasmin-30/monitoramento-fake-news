@@ -1,4 +1,4 @@
-from Noticia import Noticia
+from Modelo.Noticia import Noticia
 
 # Classe responsável apenas pela lógica de classificação
 
